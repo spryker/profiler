@@ -8,14 +8,16 @@
         <span class="sf-toolbar-value">Profiler</span>
     {% endset %}
 
-    {% set text %}
-        <div class="sf-toolbar-info-piece">
-            {% for key, value in collector.profilerData.stats %}
-                <b>{{ key }}</b>
-                <span>{{ value }}</span>
-            {% endfor %}
-        </div>
-    {% endset %}
+    {% if collector.profilerData.isXhprofExtensionEnabled %}
+        {% set text %}
+            <div class="sf-toolbar-info-piece">
+                {% for key, value in collector.profilerData.stats %}
+                    <b>{{ key }}</b>
+                    <span>{{ value }}</span>
+                {% endfor %}
+            </div>
+        {% endset %}
+    {% endif %}
 
     {{ include('@WebProfiler/Profiler/toolbar_item.html.twig', { link: profiler_url, name: 'profiler'}) }}
 {% endblock %}
@@ -30,10 +32,14 @@
 {% endblock %}
 
 {% block panel %}
-    <a href="#" class="btn js-profiler-svg-graph-button">Download Trace Graph</a>
-    <div class="js-profiler-svg-graph" style="overflow: auto; margin-top: 10px">
-        {{ collector.profilerData.content | raw }}
-    </div>
+    {% if collector.profilerData.isXhprofExtensionEnabled %}
+        <a href="#" class="btn js-profiler-svg-graph-button">Download Trace Graph</a>
+        <div class="js-profiler-svg-graph" style="overflow: auto; margin-top: 10px">
+            {{ collector.profilerData.content | raw }}
+        </div>
 
-    {{ include('@Profiler/profiler-script.html.twig') }}
+        {{ include('@Profiler/profiler-script.html.twig') }}
+    {% else %}
+        <p>To view modules call trace please enable xhprof extension. See <a href="https://docs.spryker.com/docs/scos/dev/technical-enhancement-integration-guides/Integrate-profiler-module.html#prerequisites">profiler module docs.</a></p>
+    {% endif %}
 {% endblock %}

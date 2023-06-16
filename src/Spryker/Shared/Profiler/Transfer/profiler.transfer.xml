@@ -5,6 +5,7 @@
         <property name="content" type="string"/>
         <property name="stats" type="array" singular="statsItem"/>
         <property name="type" type="string"/>
+        <property name="isXhprofExtensionEnabled" type="bool"/>
     </transfer>
 
 </transfers>
