@@ -17,9 +17,9 @@
         "spryker/testify": "*"
     },
     "suggest": {
+        "ext-xhprof": "If you want to use profiler module.",
         "spryker/container": "If you want to use Web Profiler plugins.",
-        "spryker/event-dispatcher": "If you want to use profiler listeners.",
-        "ext-xhprof": "If you want to use profiler module."
+        "spryker/event-dispatcher": "If you want to use profiler listeners."
     },
     "autoload": {
         "psr-4": {
