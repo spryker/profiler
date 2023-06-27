@@ -4,7 +4,6 @@
     "description": "Profiler module",
     "license": "proprietary",
     "require": {
-        "ext-xhprof": "*",
         "php": ">=8.0",
         "spryker/event-dispatcher-extension": "^1.0.0",
         "spryker/kernel": "^3.30.0",
@@ -18,6 +17,7 @@
         "spryker/testify": "*"
     },
     "suggest": {
+        "ext-xhprof": "If you want to use profiler module.",
         "spryker/container": "If you want to use Web Profiler plugins.",
         "spryker/event-dispatcher": "If you want to use profiler listeners."
     },

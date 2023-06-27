@@ -154,11 +154,13 @@ class SvgProfilerGraphDumper implements ProfilerGraphDumperInterface
     protected function createProfilerDataTransfer(string $svgData): ProfilerDataTransfer
     {
         $profilerDataStats = [static::STATS_MODULES_CALLS => count($this->processedNodes)];
+        $isXhprofExtensionEnabled = extension_loaded('xhprof');
 
         return (new ProfilerDataTransfer())
             ->setContent($svgData)
             ->setStats($profilerDataStats)
-            ->setType(static::SVG_DATA_TYPE);
+            ->setType(static::SVG_DATA_TYPE)
+            ->setIsXhprofExtensionEnabled($isXhprofExtensionEnabled);
     }
 
     /**
