@@ -1,6 +1,6 @@
 # Profiler Module
 [![Latest Stable Version](https://poser.pugx.org/spryker/profiler/v/stable.svg)](https://packagist.org/packages/spryker/profiler)
-[![Minimum PHP Version](https://img.shields.io/badge/php-%3E%3D%208.1-8892BF.svg)](https://php.net/)
+[![Minimum PHP Version](https://img.shields.io/badge/php-%3E%3D%208.2-8892BF.svg)](https://php.net/)
 
 Profiler is a module that adds Spryker modules call trace graph into the profiler toolbar and page.
 Module is based on [xhprof](https://github.com/longxinH/xhprof) profiler PHP extension.
