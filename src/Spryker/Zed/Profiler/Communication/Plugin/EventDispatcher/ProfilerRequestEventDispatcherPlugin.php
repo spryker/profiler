@@ -62,6 +62,10 @@ class ProfilerRequestEventDispatcherPlugin extends AbstractPlugin implements Eve
             return;
         }
 
+        if ($this->isProfilerPanelRequest($event)) {
+            return;
+        }
+
         xhprof_enable(XHPROF_FLAGS_NO_BUILTINS);
     }
 
@@ -80,11 +84,11 @@ class ProfilerRequestEventDispatcherPlugin extends AbstractPlugin implements Eve
             return;
         }
 
-        $xhprofData = xhprof_disable();
-
-        if (!is_array($xhprofData)) {
+        if ($this->isProfilerPanelRequest($event)) {
             return;
         }
+
+        $xhprofData = xhprof_disable();
 
         $profilerOutputData = $this->getFactory()->createProfilerCallTraceVisualizer()->visualizeProfilerCallTrace($xhprofData);
         $this->getFactory()->createProfilerDataStorage()->logProfilerData($profilerOutputData);
@@ -96,5 +100,17 @@ class ProfilerRequestEventDispatcherPlugin extends AbstractPlugin implements Eve
     protected function isProfilerEnabled(): bool
     {
         return extension_loaded('xhprof') && $this->getConfig()->isProfilerEnabled();
+    }
+
+    /**
+     * @param \Symfony\Component\HttpKernel\Event\KernelEvent $event
+     *
+     * @return bool
+     */
+    protected function isProfilerPanelRequest(KernelEvent $event): bool
+    {
+        $requestUri = $event->getRequest()->server->get('REQUEST_URI', '');
+
+        return (bool)preg_match('~^/_(?:profiler|fragment)~', $requestUri);
     }
 }
