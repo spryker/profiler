@@ -11,6 +11,13 @@ jobs:
     validation:
         name: Validation
         runs-on: ubuntu-latest
+        strategy:
+            fail-fast: false
+            matrix:
+                php-version: [
+                    '8.3',
+                    '8.5'
+                ]
 
         steps:
             - uses: actions/checkout@v2
@@ -18,10 +25,7 @@ jobs:
             - name: Setup PHP
               uses: shivammathur/setup-php@v2
               with:
-                  php-version: [
-                      '8.3',
-                      '8.4'
-                  ]
+                  php-version: ${{ matrix.php-version }}
                   extensions: mbstring, intl, bcmath
                   coverage: none
 
