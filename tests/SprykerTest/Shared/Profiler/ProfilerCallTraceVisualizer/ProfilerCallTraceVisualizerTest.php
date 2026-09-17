@@ -53,4 +53,25 @@ class ProfilerCallTraceVisualizerTest extends Unit
         // Assert
         $this->tester->assertGeneratedProfilerDataHasOnlySlowerNodes($profilerData);
     }
+
+    /**
+     * The root `main()` edge carries the request's own total wall time, so a threshold higher
+     * than that total (as opposed to higher than an individual child node's time) must not drop
+     * the root itself -- doing so leaves the graph without a "Request" node to dump.
+     *
+     * @return void
+     */
+    public function testVisualizerReturnValidProfilerDataWhenRootExecutionTimeIsBelowThreshold(): void
+    {
+        // Arrange
+        $xhprofTrace = $this->tester->haveXhprofProfilerCallTrace();
+        $minNodeExecutionWallTimeInMicroSeconds = $xhprofTrace['main()']['wt'] + 1;
+        $profilerVisualizer = $this->tester->createXhprofVisualizer($minNodeExecutionWallTimeInMicroSeconds);
+
+        // Act
+        $profilerData = $profilerVisualizer->visualizeProfilerCallTrace($xhprofTrace);
+
+        // Assert
+        $this->assertStringContainsString('Request', $profilerData->getContent());
+    }
 }

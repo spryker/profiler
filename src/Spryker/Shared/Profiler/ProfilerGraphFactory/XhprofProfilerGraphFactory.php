@@ -54,7 +54,7 @@ class XhprofProfilerGraphFactory implements ProfilerGraphFactoryInterface
         $profilerGraph = new ProfilerGraph($this->profilerGraphNodeStorageFactory->createNodeStorage());
 
         foreach ($callTrace as $graphEdge => $executeData) {
-            if (isset($executeData['wt']) && $executeData['wt'] < $this->minNodeExecutionWallTimeInMicroSeconds) {
+            if (!$this->isRootEdge($graphEdge) && isset($executeData['wt']) && $executeData['wt'] < $this->minNodeExecutionWallTimeInMicroSeconds) {
                 continue;
             }
 
@@ -62,6 +62,21 @@ class XhprofProfilerGraphFactory implements ProfilerGraphFactoryInterface
         }
 
         return $profilerGraph;
+    }
+
+    /**
+     * The root `main()` edge represents the request's own total wall time, not an individual
+     * node's time, so it must never be dropped by the wall-time threshold -- ProfilerGraph::
+     * filterGraph() already exempts the root node from its own (module-based) filter for the
+     * same reason.
+     *
+     * @param string $graphEdge
+     *
+     * @return bool
+     */
+    protected function isRootEdge(string $graphEdge): bool
+    {
+        return count(explode('==>', $graphEdge)) === static::ROOT_EDGE_PARTS_COUNT;
     }
 
     /**
